@@ -449,6 +449,35 @@
       font-size: .88rem; color: #6b7280; line-height: 1.7;
     }
 
+    /* toast */
+    .toast {
+      position: fixed; bottom: 24px; left: 24px; right: 24px;
+      z-index: 99999; background: #1a1a1a; border: 1px solid rgba(212,160,23,.2);
+      border-radius: 12px; padding: 16px 20px; box-shadow: 0 10px 40px rgba(0,0,0,.5);
+      display: flex; align-items: center; gap: 12px;
+      opacity: 0; pointer-events: none; transition: all .4s;
+      transform: translateY(20px);
+    }
+    .toast.show {
+      opacity: 1; pointer-events: auto; transform: translateY(0);
+    }
+    @media (min-width: 769px) {
+      .toast {
+        left: 50%; right: auto; width: auto;
+        transform: translateX(-50%) translateY(20px);
+        max-width: 500px;
+      }
+      .toast.show { transform: translateX(-50%) translateY(0); }
+    }
+    .toast .check {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(212,160,23,.12); border: 1px solid rgba(212,160,23,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .toast p { font-size: .88rem; color: #d1d5db; line-height: 1.5; }
+    .toast p strong { color: #d4a017; }
+
     /* lightbox */
     .lb-overlay {
       display: flex; position: fixed; z-index: 9999; inset: 0;
@@ -975,6 +1004,11 @@
   </div>
 </div>
 
+<div class="toast" id="toast">
+  <div class="check">✓</div>
+  <p><strong>Mulțumim!</strong> Vom reveni cu o ofertă personalizată în cel mai scurt timp.</p>
+</div>
+
 <footer>
   <div class="container">
     <p style="margin-bottom:4px;">&copy; 2026 <strong>Terase De Lux</strong> Moldova. Toate drepturile rezervate.</p>
@@ -1020,6 +1054,12 @@
     input.style.borderColor = '';
   }
 
+  function showToast() {
+    var t = document.getElementById('toast');
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 4000);
+  }
+
   document.getElementById('contactForm').addEventListener('submit', function(e) {
     e.preventDefault();
     var phone = this.querySelector('input[type="tel"]');
@@ -1028,7 +1068,7 @@
       showError(phone, 'Introdu un număr de telefon valid (minim 7 cifre)');
       return;
     }
-    alert('Mulțumim! Vom reveni cu o ofertă personalizată în cel mai scurt timp.');
+    showToast();
     this.reset();
   });
   document.addEventListener('DOMContentLoaded', function() {
@@ -1068,7 +1108,7 @@
       return;
     }
     closePopup();
-    alert('Mulțumim! Vom reveni cu o ofertă în cel mai scurt timp.');
+    showToast();
     this.reset();
   });
 
