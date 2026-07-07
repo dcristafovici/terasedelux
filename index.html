@@ -31,8 +31,12 @@
       display: flex; align-items: center; justify-content: space-between;
       height: 72px;
     }
-    .logo { text-decoration: none; display: flex; align-items: center; }
-    .logo img { height: 40px; width: auto; display: block; }
+    .logo {
+      font-weight: 800; font-size: 1.35rem;
+      letter-spacing: -.02em; color: #fff;
+      text-decoration: none;
+    }
+    .logo span { color: #d4a017; }
     nav a {
       margin-left: 32px; text-decoration: none; font-size: .88rem;
       font-weight: 500; color: #9ca3af; transition: color .25s;
@@ -510,6 +514,17 @@
       line-height: 1; opacity: .6; transition: .2s;
     }
     .lb-overlay .close:hover { opacity: 1; }
+    .lb-overlay .lb-prev,
+    .lb-overlay .lb-next {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-size: 2.5rem; color: rgba(255,255,255,.6); cursor: pointer;
+      padding: 20px 16px; user-select: none; transition: .2s;
+      line-height: 1; z-index: 1;
+    }
+    .lb-overlay .lb-prev { left: 10px; }
+    .lb-overlay .lb-next { right: 10px; }
+    .lb-overlay .lb-prev:hover,
+    .lb-overlay .lb-next:hover { color: #fff; }
 
     /* popup */
     .popup-overlay {
@@ -620,7 +635,7 @@
 
 <header>
   <div class="container">
-    <a href="#" class="logo"><img src="./assets/thumbs/logo.jpg" alt="Terase De Lux"></a>
+    <a href="#" class="logo">Terase<span>DeLux</span></a>
     <nav id="nav">
       <a href="#produse">Produse</a>
       <a href="#galerie">Galerie</a>
@@ -720,7 +735,7 @@
 <section id="galerie" class="gallery-section">
   <div class="container">
     <div class="section-title">
-      <h2><span>Galerie</span></h2>
+      <h2><span>Proiectele</span> noastre</h2>
     </div>
   </div>
   <div class="container">
@@ -969,7 +984,9 @@
 
 <div class="lb-overlay" id="lbOverlay">
   <span class="close">&times;</span>
+  <span class="lb-prev" id="lbPrev">&#10094;</span>
   <img id="lbImg" src="" alt="">
+  <span class="lb-next" id="lbNext">&#10095;</span>
 </div>
 <script>
   document.getElementById('hamburger').addEventListener('click', function() {
@@ -1042,21 +1059,44 @@
     "img_1267.jpg","img_1268.jpg","img_1269.jpg","img_1270.jpg","img_1271.jpg",
     "img_1274.jpg","img_1276.jpg","img_1278.jpg"
   ];
-  var visibleCount = 9;
+  var visibleCount = 12;
   var grid = document.getElementById('galleryGrid');
   var showMoreBtn = document.getElementById('showMoreBtn');
   var lb = document.getElementById('lbOverlay');
   var lbImg = document.getElementById('lbImg');
+  var lbPrev = document.getElementById('lbPrev');
+  var lbNext = document.getElementById('lbNext');
+  var lbItems = [];
+  var lbIndex = 0;
+
+  function openLightbox(index) {
+    if (index < 0) index = 0;
+    if (index >= lbItems.length) index = lbItems.length - 1;
+    lbIndex = index;
+    lbImg.src = lbItems[lbIndex];
+    lb.classList.add('active');
+  }
 
   function attachLightbox() {
+    lbItems = [];
     document.querySelectorAll('.glightbox').forEach((el) => {
+      lbItems.push(el.href);
       el.addEventListener('click', function(e) {
         e.preventDefault();
-        lbImg.src = this.href;
-        lb.classList.add('active');
+        var idx = lbItems.indexOf(this.href);
+        openLightbox(idx);
       });
     });
   }
+
+  lbPrev.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openLightbox(lbIndex - 1);
+  });
+  lbNext.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openLightbox(lbIndex + 1);
+  });
 
   function renderGallery() {
     var html = '';
@@ -1074,7 +1114,7 @@
   }
 
   function showMore() {
-    visibleCount += 9;
+    visibleCount += 12;
     renderGallery();
   }
 
@@ -1083,6 +1123,13 @@
       lb.classList.remove('active');
       lbImg.src = '';
     }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!lb.classList.contains('active')) return;
+    if (e.key === 'ArrowLeft') { e.preventDefault(); openLightbox(lbIndex - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); openLightbox(lbIndex + 1); }
+    if (e.key === 'Escape') { lb.classList.remove('active'); lbImg.src = ''; }
   });
 
   renderGallery();
