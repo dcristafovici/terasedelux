@@ -31,12 +31,8 @@
       display: flex; align-items: center; justify-content: space-between;
       height: 72px;
     }
-    .logo {
-      font-weight: 800; font-size: 1.35rem;
-      letter-spacing: -.02em; color: #fff;
-      text-decoration: none;
-    }
-    .logo span { color: #d4a017; }
+    .logo { text-decoration: none; display: flex; align-items: center; }
+    .logo img { height: 40px; width: auto; display: block; }
     nav a {
       margin-left: 32px; text-decoration: none; font-size: .88rem;
       font-weight: 500; color: #9ca3af; transition: color .25s;
@@ -624,7 +620,7 @@
 
 <header>
   <div class="container">
-    <a href="#" class="logo">Terase<span>DeLux</span></a>
+    <a href="#" class="logo"><img src="./assets/thumbs/logo.jpg" alt="Terase De Lux"></a>
     <nav id="nav">
       <a href="#produse">Produse</a>
       <a href="#galerie">Galerie</a>
@@ -724,8 +720,7 @@
 <section id="galerie" class="gallery-section">
   <div class="container">
     <div class="section-title">
-      <h2>Proiectele <span>noastre</span></h2>
-      <p>Terase, copertine și soluții complete livrate în toată Moldova.</p>
+      <h2><span>Galerie</span></h2>
     </div>
   </div>
   <div class="container">
@@ -902,8 +897,15 @@
           <div class="cd-item">
             <div class="cd-icon">📞</div>
             <div class="cd-text">
-              <strong>Telefon</strong>
-              <a href="tel:+37361119191">+373 61 119 191</a>
+              <strong>Moldova</strong>
+              <a href="tel:+37361182251">+373 61 182 251</a>
+            </div>
+          </div>
+          <div class="cd-item">
+            <div class="cd-icon">📞</div>
+            <div class="cd-text">
+              <strong>Germania</strong>
+              <a href="tel:+4915129559450">+49 151 29559450</a>
             </div>
           </div>
           <div class="cd-item">
@@ -981,7 +983,9 @@
     });
   });
   function validPhone(phone) {
-    var digits = phone.replace(/\D/g, '');
+    var digits = phone.replace(/[\s\-+()]/g, '');
+    digits = digits.replace(/^00/, '');
+    digits = digits.replace(/\D/g, '');
     return digits.length >= 7 && digits.length <= 15;
   }
 
@@ -1045,7 +1049,7 @@
   var lbImg = document.getElementById('lbImg');
 
   function attachLightbox() {
-    document.querySelectorAll('.glightbox').forEach(function(el) {
+    document.querySelectorAll('.glightbox').forEach((el) => {
       el.addEventListener('click', function(e) {
         e.preventDefault();
         lbImg.src = this.href;
@@ -1059,10 +1063,8 @@
     for (var i = 0; i < visibleCount && i < galleryImages.length; i++) {
       var file = galleryImages[i];
       var num = i + 1;
-      html += '<a href="./assets/' + file + '" class="glightbox" title="Proiect ' + num + '">' +
-        '<img src="./assets/thumbs/' + file + '" alt="Proiect ' + num + '" loading="lazy">' +
-        '<div class="gallery-overlay"><span>Proiect ' + num + '</span><small>Lucrare terasă</small></div>' +
-        '</a>';
+      html += '<a href="./assets/' + file + '" class="glightbox">' +
+        '<img src="./assets/thumbs/' + file + '" alt="" loading="lazy"></a>';
     }
     grid.innerHTML = html;
     attachLightbox();
@@ -1076,7 +1078,7 @@
     renderGallery();
   }
 
-  lb.addEventListener('click', function(e) {
+  lb.addEventListener('click', (e) => {
     if (e.target === lb || e.target === lbImg || e.target.classList.contains('close')) {
       lb.classList.remove('active');
       lbImg.src = '';
