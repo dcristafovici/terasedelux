@@ -653,7 +653,7 @@
     <nav id="nav">
       <a href="#galerie">Galerie</a>
       <a href="#proces">Proces</a>
-      <a href="#faq">FAQ</a>
+      <a href="#faq">Întrebări frecvente</a>
       <a href="#contact">Contact</a>
     </nav>
     <button class="hamburger" id="hamburger" aria-label="Meniu">
@@ -852,20 +852,11 @@
     <div class="faq-list">
       <div class="faq-item active">
         <button class="faq-question" onclick="toggleFaq(this)">
-          Cât costă o terasă din aluminiu?
-          <span class="arrow">▼</span>
-        </button>
-        <div class="faq-answer">
-          <p>Prețul depinde de dimensiuni, configurație și materiale. O terasă standard de 20-30m² pornește de la ~400€/m² cu montaj inclus. Oferim consultație gratuită și proiect 3D personalizat.</p>
-        </div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-question" onclick="toggleFaq(this)">
           Cât durează montajul?
           <span class="arrow">▼</span>
         </button>
         <div class="faq-answer">
-          <p>De obicei 2-5 zile lucrătoare, în funcție de complexitate. Structurile simple se montează în 1-2 zile, iar cele mai complexe (cu sticlă, electrică) pot dura până la o săptămână.</p>
+          <p>De obicei 2-5 zile lucrătoare, în funcție de complexitate. Structurile simple se montează în 1-2 zile, iar cele mai complexe pot dura până la o săptămână.</p>
         </div>
       </div>
       <div class="faq-item">
@@ -909,16 +900,16 @@
       <div>
         <form id="contactForm">
           <div class="form-group">
-            <input type="text" placeholder="Numele tău" required>
+            <input type="text" name="name" placeholder="Numele tău" required>
           </div>
           <div class="form-group">
-            <input type="tel" placeholder="Numărul de telefon" required>
+            <input type="tel" name="phone" placeholder="Numărul de telefon" required>
           </div>
           <div class="form-group">
-            <input type="email" placeholder="Email (opțional)">
+            <input type="email" name="email" placeholder="Email (opțional)">
           </div>
           <div class="form-group">
-            <textarea placeholder="Descrie pe scurt ce dorești (dimensiuni, tipul construcției etc.)"></textarea>
+            <textarea name="message" placeholder="Descrie pe scurt ce dorești (dimensiuni, tipul construcției etc.)"></textarea>
           </div>
           <button type="submit" class="btn btn-primary" style="width:100%">Trimite cererea</button>
         </form>
@@ -945,7 +936,7 @@
             <div class="cd-icon">✉️</div>
             <div class="cd-text">
               <strong>Email</strong>
-              <a href="mailto:terasedelux@gmail.com">terasedelux@gmail.com</a>
+              <a href="mailto:terase@lux-terra.md">terase@lux-terra.md</a>
             </div>
           </div>
 
@@ -962,13 +953,13 @@
     <p>Lasă-ne datele tale și revenim cu o ofertă adaptată nevoilor tale.</p>
     <form id="popupForm">
       <div class="form-group">
-        <input type="text" placeholder="Numele tău" required>
+        <input type="text" name="name" placeholder="Numele tău" required>
       </div>
       <div class="form-group">
-        <input type="tel" placeholder="Numărul de telefon" required>
+        <input type="tel" name="phone" placeholder="Numărul de telefon" required>
       </div>
       <div class="form-group">
-        <textarea placeholder="Ce dorești? (ex: terasă 4x5m, copertină aluminiu)"></textarea>
+        <textarea name="message" placeholder="Ce dorești? (ex: terasă 4x5m, copertină aluminiu)"></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Trimite</button>
     </form>
@@ -1028,22 +1019,41 @@
     input.style.borderColor = '';
   }
 
-  function showToast() {
+  function showToast(msg) {
     var t = document.getElementById('toast');
+    var tp = t.querySelector('p');
+    if (msg) tp.innerHTML = msg;
     t.classList.add('show');
     setTimeout(() => { t.classList.remove('show'); }, 4000);
   }
 
-  document.getElementById('contactForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    var phone = this.querySelector('input[type="tel"]');
+  function submitForm(form, done) {
+    var phone = form.querySelector('input[type="tel"]');
     clearError(phone);
     if (!validPhone(phone.value)) {
       showError(phone, 'Introdu un număr de telefon valid (minim 7 cifre)');
       return;
     }
-    showToast();
-    this.reset();
+    var fd = new FormData(form);
+    fetch('send.php', { method: 'POST', body: fd })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.ok) {
+          showToast('<strong>Mulțumim!</strong> Vom reveni cu o ofertă personalizată în cel mai scurt timp.');
+          form.reset();
+          if (done) done();
+        } else {
+          showToast('<strong>Eroare.</strong> ' + (d.error || 'Încearcă mai târziu.'));
+        }
+      })
+      .catch(() => {
+        showToast('<strong>Eroare.</strong> Verifică conexiunea și încearcă din nou.');
+      });
+  }
+
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    submitForm(this);
   });
   var galleryImages = [
     { file:"img_1169.jpg", cat:"carporturi" },
@@ -1139,7 +1149,7 @@
 
   function getFilteredImages() {
     if (activeFilter === 'all') return galleryImages;
-    return galleryImages.filter(function(item) { return catKey(item.cat) === activeFilter; });
+    return galleryImages.filter((item) => catKey(item.cat) === activeFilter);
   }
 
   function openLightbox(index) {
@@ -1152,7 +1162,7 @@
 
   function attachLightbox() {
     lbItems = [];
-    document.querySelectorAll('.glightbox').forEach(function(el) {
+    document.querySelectorAll('.glightbox').forEach((el) => {
       lbItems.push(el.href);
       el.addEventListener('click', function(e) {
         e.preventDefault();
@@ -1162,11 +1172,11 @@
     });
   }
 
-  lbPrev.addEventListener('click', function(e) {
+  lbPrev.addEventListener('click', (e) => {
     e.stopPropagation();
     openLightbox(lbIndex - 1);
   });
-  lbNext.addEventListener('click', function(e) {
+  lbNext.addEventListener('click', (e) => {
     e.stopPropagation();
     openLightbox(lbIndex + 1);
   });
@@ -1197,7 +1207,7 @@
   function setFilter(cat) {
     activeFilter = cat;
     visibleCount = 12;
-    document.querySelectorAll('.filter-btn').forEach(function(btn) {
+    document.querySelectorAll('.filter-btn').forEach((btn) => {
       btn.classList.toggle('active', btn.getAttribute('data-filter') === cat);
     });
     var filtered = getFilteredImages();
@@ -1209,7 +1219,7 @@
     renderGallery();
   }
 
-  document.querySelectorAll('.filter-btn').forEach(function(btn) {
+  document.querySelectorAll('.filter-btn').forEach((btn) => {
     btn.addEventListener('click', function() {
       setFilter(this.getAttribute('data-filter'));
     });
@@ -1243,15 +1253,7 @@
   });
   document.getElementById('popupForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    var phone = this.querySelector('input[type="tel"]');
-    clearError(phone);
-    if (!validPhone(phone.value)) {
-      showError(phone, 'Introdu un număr de telefon valid (minim 7 cifre)');
-      return;
-    }
-    closePopup();
-    showToast();
-    this.reset();
+    submitForm(this, closePopup);
   });
 
   function toggleFaq(btn) {
