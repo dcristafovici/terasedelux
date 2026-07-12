@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
-$to = "terase@lux-terra.md";
+$to = "terase@lux-terra.md, cristafovici.den@gmail.com";
 
 $name = isset($_POST['name']) ? trim($_POST['name']) : '';
 $phone = isset($_POST['phone']) ? trim($_POST['phone']) : '';
