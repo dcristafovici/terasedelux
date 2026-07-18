@@ -16,7 +16,7 @@
       line-height: 1.6;
       width: 100%;
     }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; width: 100%; box-sizing: border-box; }
 
     img { max-width: 100%; height: auto; display: block; }
 
@@ -31,12 +31,8 @@
       display: flex; align-items: center; justify-content: space-between;
       height: 72px;
     }
-    .logo {
-      font-weight: 800; font-size: 1.35rem;
-      letter-spacing: -.02em; color: #fff;
-      text-decoration: none;
-    }
-    .logo span { color: #d4a017; }
+    .logo { display: flex; align-items: center; height: 100%; }
+    .logo img { height: 100%; display: block; width: 100%; object-fit: contain; }
     nav a {
       margin-left: 32px; text-decoration: none; font-size: .88rem;
       font-weight: 500; color: #9ca3af; transition: color .25s;
@@ -67,22 +63,27 @@
     /* hero */
     .hero {
       height: 100vh;
-      display: flex; align-items: center;
-      padding: 72px 0 80px;
+      display: flex; align-items:center;
+      padding: 96px 0 80px;
+
       position: relative; overflow: hidden;
     }
+    .hero .container { position: relative; z-index: 1; }
     .hero-bg {
       position: absolute; inset: 0; z-index: 0;
+    }
+
+    .hero-grid {
+      max-width: 600px;
     }
     .hero-bg img {
       width: 100%; height: 100%; object-fit: cover;
     }
     .hero-bg .overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.5) 100%);
+      background: linear-gradient(135deg, rgba(0,0,0,.4) 0%, rgba(0,0,0,.2) 100%);
     }
-    .hero .container { position: relative; z-index: 1; }
-    .hero-grid { max-width: 700px; }
+
     .hero h1 {
       font-size: 3.2rem; font-weight: 800; line-height: 1.08;
       letter-spacing: -.03em; margin-bottom: 16px; color: #fff;
@@ -595,6 +596,7 @@
     /* mobile */
     @media (max-width: 768px) {
       .container { padding: 0 24px; }
+      .logo { max-width: 150px; }
       .hamburger { display: flex; }
       nav {
         display: flex; flex-direction: column;
@@ -623,7 +625,6 @@
       nav a:nth-child(6) { transition-delay: .3s; }
       .hero { height: 100vh; padding: 72px 0 70px; }
       .hero h1 { font-size: 1.8rem; }
-      .hero-grid { max-width: 100%; }
 
       .features-grid { grid-template-columns: 1fr; }
       .gallery-grid { grid-template-columns: repeat(2, 1fr); }
@@ -650,7 +651,7 @@
 
 <header>
   <div class="container">
-    <a href="#" class="logo"><span>Lux</span>Terra</a>
+    <a href="#" class="logo"><img src="./assets/logo_without_bg.png" alt="LuxTerra"></a>
     <nav id="nav">
       <a href="#galerie">Galerie</a>
       <a href="#proces">Proces</a>
@@ -665,12 +666,12 @@
 
 <section class="hero">
   <div class="hero-bg">
-    <img src="./assets/thumbs/img_1070.jpg" alt="Pergolă modernă cu terasă">
+    <img src="./assets/thumbs/inchise/img_1235.jpg" alt="Pergolă modernă cu terasă">
     <div class="overlay"></div>
   </div>
   <div class="container">
     <div class="hero-grid">
-      <h1>Terase și copertine <span>de lux</span> — LuxTerra</h1>
+      <h1>Terase și <span>carporturi</span> </h1>
       <p class="hero-sub">Profil din aluminiu, sticlă securizată, garanție 10 ani. Proiectare individuală și model 3D gratuit — în toată Moldova.</p>
       <a href="#" class="btn btn-primary" onclick="showPopup();return false;">Solicită ofertă</a>
     </div>
@@ -788,7 +789,7 @@
         <div class="icon-wrap">⚙️</div>
         <div class="step-line"></div>
         <h4>Producție</h4>
-        <p>Fabricăm structura la comandă din aluminiu premium german, în atelierele noastre.</p>
+        <p>Fabricăm structura la comandă din aluminiu premium german.</p>
       </div>
       <div class="process-step">
         <div class="icon-wrap">🔧</div>
