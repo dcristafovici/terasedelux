@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lux-terra.md/sitemap.xml
